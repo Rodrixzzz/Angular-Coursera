@@ -23,31 +23,41 @@ export class DishdetailComponent implements OnInit {
   next: string;
 
   validationMessages = {
-    firstname: {
-      required:      'First Name is required.',
-      minlength:     'First Name must be at least 2 characters long.',
-      maxlength:     'FirstName cannot be more than 25 characters long.'
+    author: {
+      required:      'Author is required.',
+      minlength:     'Author must be at least 2 characters long.',
+      maxlength:     'Author cannot be more than 25 characters long.'
     },
-    lastname: {
-      required:      'Last Name is required.',
-      minlength:     'Last Name must be at least 2 characters long.',
-      maxlength:     'Last Name cannot be more than 25 characters long.'
+    comment: {
+      required:      'Comment is required.',
+      minlength:     'Comment must be at least 2 characters long.',
+      maxlength:     'Comment cannot be more than 50 characters long.'
     },
-    telnum: {
-      required:      'Tel. number is required.',
-      pattern:       'Tel. number must contain only numbers.'
+    rating: {
+      required:      'Rating is required.',
+      pattern:       'Rating must contain only numbers.',
+      max:           'Rating value must be lower or equal than 5',
+      min:           'Rating value must be greater than 0'
     },
-    email: {
-      required:      'Email is required.',
-      email:         'Email not in valid format.'
+    date: {
+      required:      'Date is required.'
     },
+  };
+  formErrors = {
+    author: '',
+    comment: '',
+    rating: '',
+    date: ''
   };
   @ViewChild('fform', {static: false}) CommentFormDirective;
 
   // tslint:disable-next-line: no-shadowed-variable
   constructor(private dishservice: DishService,
               private route: ActivatedRoute,
-              private location: Location) { }
+              private location: Location,
+              private fb: FormBuilder) {
+                this.CreateForm();
+              }
 
   ngOnInit() {
     this.dishservice.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
@@ -60,6 +70,42 @@ export class DishdetailComponent implements OnInit {
     const index = this.dishIds.indexOf(dishId);
     this.prev = this.dishIds[(this.dishIds.length + index - 1) % this.dishIds.length];
     this.next = this.dishIds[(this.dishIds.length + index + 1) % this.dishIds.length];
+  }
+  CreateForm(): void {
+    this.commentForm = this.fb.group({
+      author: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)] ],
+      comment: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)] ],
+      rating: ['', [Validators.required, Validators.pattern, Validators.max(5), Validators.min(1)] ],
+      date: [Date.now().toString(), [Validators.required] ],
+    });
+    this.commentForm.valueChanges
+      .subscribe(data => this.onValueChanged(data));
+
+    this.onValueChanged(); // (re)set validation messages now
+  }
+
+  onValueChanged(data?: any) {
+    if (!this.commentForm) { return; }
+    const form = this.commentForm;
+    for (const field in this.formErrors) {
+      if (this.formErrors.hasOwnProperty(field)) {
+        // clear previous error message (if any)
+        this.formErrors[field] = '';
+        const control = form.get(field);
+        if (control && control.dirty && !control.valid) {
+          const messages = this.validationMessages[field];
+          for (const key in control.errors) {
+            if (control.errors.hasOwnProperty(key)) {
+              this.formErrors[field] += messages[key] + ' ';
+            }
+          }
+        }
+      }
+    }
+  }
+
+  onSubmit() {
+
   }
 
 }

@@ -65,43 +65,43 @@
         <mat-form-field class="half-width">
           <input
             matInput
-            formControlName="firstname"
-            placeholder="First Name"
+            formControlName="author"
+            placeholder="Author"
             type="text"
             required
           />
-          <mat-error *ngIf="formErrors.firstname">{{
-            formErrors.firstname
+          <mat-error *ngIf="formErrors.author">{{
+            formErrors.author
           }}</mat-error>
         </mat-form-field>
-        <mat-form-field class="half-width">
+        <!-- <mat-form-field class="half-width">
           <input
             matInput
-            formControlName="lastname"
-            placeholder="Last Name"
+            formControlName="comment"
+            placeholder="Comment"
             type="text"
             required
           />
-          <mat-error *ngIf="formErrors.lastname">{{
-            formErrors.lastname
+          <mat-error *ngIf="formErrors.comment">{{
+            formErrors.comment
           }}</mat-error>
-        </mat-form-field>
+        </mat-form-field> -->
       </p>
       <p>
         <mat-form-field class="half-width">
           <input
             matInput
-            formControlName="telnum"
-            placeholder="Tel. Number"
-            type="tel"
-            pattern="[0-9]*"
+            formControlName="rating"
+            placeholder="Rating"
+            type="number"
+            pattern="[0-5]*"
             required
           />
-          <mat-error *ngIf="formErrors.telnum">{{
-            formErrors.telnum
+          <mat-error *ngIf="formErrors.rating">{{
+            formErrors.rating
           }}</mat-error>
         </mat-form-field>
-        <mat-form-field class="half-width">
+        <!-- <mat-form-field class="half-width">
           <input
             matInput
             formControlName="email"
@@ -110,17 +110,21 @@
             email
             required
           />
-          <mat-error *ngIf="formErrors.email">{{ formErrors.email }}</mat-error>
-        </mat-form-field>
+          <mat-error *ngIf="formErrors.date">{{ formErrors.date }}</mat-error>
+        </mat-form-field> -->
       </p>
       <p>
         <mat-form-field class="full-width">
           <textarea
             matInput
-            formControlName="message"
-            placeholder="Your Feedback"
-            rows="12"
+            formControlName="comment"
+            placeholder="Your Comment"
+            rows="5"
+            required
           ></textarea>
+          <mat-error *ngIf="formErrors.comment">{{
+            formErrors.comment
+          }}</mat-error>
         </mat-form-field>
       </p>
       <button

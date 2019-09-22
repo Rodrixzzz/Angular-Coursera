@@ -32,16 +32,7 @@ export class DishdetailComponent implements OnInit {
       required:      'Comment is required.',
       minlength:     'Comment must be at least 2 characters long.',
       maxlength:     'Comment cannot be more than 50 characters long.'
-    },
-    rating: {
-      required:      'Rating is required.',
-      pattern:       'Rating must contain only numbers.',
-      max:           'Rating value must be lower or equal than 5',
-      min:           'Rating value must be greater than 0'
-    },
-    date: {
-      required:      'Date is required.'
-    },
+    }
   };
   formErrors = {
     author: '',
@@ -75,8 +66,7 @@ export class DishdetailComponent implements OnInit {
     this.commentForm = this.fb.group({
       author: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)] ],
       comment: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)] ],
-      rating: ['', [Validators.required, Validators.pattern, Validators.max(5), Validators.min(1)] ],
-      date: [Date.now().toString(), [Validators.required] ],
+      rating: ['', [] ]
     });
     this.commentForm.valueChanges
       .subscribe(data => this.onValueChanged(data));
@@ -102,9 +92,20 @@ export class DishdetailComponent implements OnInit {
         }
       }
     }
+    this.comment = form.value;
   }
 
   onSubmit() {
+    this.comment = this.commentForm.value;
+    this.comment.date = new Date().toISOString();
+    this.dish.comments.push(this.comment);
+    console.log(this.comment);
+    this.comment = null;
+    this.commentForm.reset({
+      author: '',
+      comment: '',
+      rating: 5
+    });
 
   }
 
